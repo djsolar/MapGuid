@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Figure Width="1080" Height="584" MaxID="25">
+  <Nodes>
+    <Node ID="1" Coordinates="250,209.2" LocationId="0" CategoryId="5" Points="0" />
+    <Node ID="2" Coordinates="296.4,207.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="3" Coordinates="289.2,256.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="4" Coordinates="238.8,290" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="5" Coordinates="230.8,331.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="6" Coordinates="283.6,331.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="7" Coordinates="325.2,338" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="8" Coordinates="287.6,293.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="9" Coordinates="328.4,290" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="10" Coordinates="704.4,202" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="11" Coordinates="701.2,227.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="12" Coordinates="726.8,229.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="13" Coordinates="779.6,224.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="14" Coordinates="771.6,191.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="15" Coordinates="787.6,258" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="16" Coordinates="731.6,275.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="17" Coordinates="795.6,336.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="18" Coordinates="414.8,253.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="19" Coordinates="362.8,253.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="20" Coordinates="357.2,290.8" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="21" Coordinates="550.8,284.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="22" Coordinates="627.6,226" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="23" Coordinates="680.4,258" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="24" Coordinates="843.6,247.6" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="25" Coordinates="859.6,296.4" LocationId="0" CategoryId="0" Points="0" />
+  </Nodes>
+  <Edges>
+    <Edge NodeID1="25" NodeID2="17" Weight="75" />
+    <Edge NodeID1="24" NodeID2="25" Weight="51" />
+    <Edge NodeID1="13" NodeID2="24" Weight="68" />
+    <Edge NodeID1="13" NodeID2="14" Weight="34" />
+    <Edge NodeID1="12" NodeID2="13" Weight="53" />
+    <Edge NodeID1="16" NodeID2="15" Weight="59" />
+    <Edge NodeID1="16" NodeID2="23" Weight="54" />
+    <Edge NodeID1="12" NodeID2="16" Weight="47" />
+    <Edge NodeID1="11" NodeID2="10" Weight="26" />
+    <Edge NodeID1="22" NodeID2="11" Weight="74" />
+    <Edge NodeID1="21" NodeID2="22" Weight="96" />
+    <Edge NodeID1="20" NodeID2="21" Weight="194" />
+    <Edge NodeID1="19" NodeID2="18" Weight="52" />
+    <Edge NodeID1="20" NodeID2="19" Weight="38" />
+    <Edge NodeID1="9" NodeID2="20" Weight="29" />
+    <Edge NodeID1="9" NodeID2="7" Weight="48" />
+    <Edge NodeID1="8" NodeID2="9" Weight="41" />
+    <Edge NodeID1="8" NodeID2="6" Weight="39" />
+    <Edge NodeID1="4" NodeID2="8" Weight="49" />
+    <Edge NodeID1="4" NodeID2="5" Weight="42" />
+    <Edge NodeID1="1" NodeID2="4" Weight="82" />
+    <Edge NodeID1="1" NodeID2="3" Weight="61" />
+    <Edge NodeID1="1" NodeID2="2" Weight="46" />
+  </Edges>
+</Figure>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Figure Width="1080" Height="584" MaxID="100">
+  <Nodes>
+    <Node ID="77" Coordinates="249.2,208.4" LocationId="0" CategoryId="5" Points="0" />
+    <Node ID="79" Coordinates="696.4,200.4" LocationId="0" CategoryId="5" Points="0" />
+    <Node ID="81" Coordinates="281.2,257.2" LocationId="47" CategoryId="6" Points="0" />
+    <Node ID="82" Coordinates="293.2,206.8" LocationId="48" CategoryId="6" Points="0" />
+    <Node ID="83" Coordinates="280.4,328.4" LocationId="14" CategoryId="6" Points="0" />
+    <Node ID="84" Coordinates="238,294" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="85" Coordinates="285.2,296.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="86" Coordinates="326.8,293.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="87" Coordinates="320.4,321.2" LocationId="15" CategoryId="6" Points="0" />
+    <Node ID="88" Coordinates="230,331.6" LocationId="13" CategoryId="6" Points="0" />
+    <Node ID="91" Coordinates="702.8,230" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="92" Coordinates="776.4,229.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="93" Coordinates="726.8,229.2" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="95" Coordinates="771.6,192.4" LocationId="53" CategoryId="6" Points="0" />
+    <Node ID="96" Coordinates="734,280.4" LocationId="0" CategoryId="0" Points="0" />
+    <Node ID="97" Coordinates="757.2,313.2" LocationId="51" CategoryId="6" Points="0" />
+    <Node ID="98" Coordinates="781.2,257.2" LocationId="52" CategoryId="6" Points="0" />
+  </Nodes>
+  <Edges>
+    <Edge NodeID1="91" NodeID2="93" Weight="24" />
+    <Edge NodeID1="96" NodeID2="97" Weight="40" />
+    <Edge NodeID1="93" NodeID2="96" Weight="52" />
+    <Edge NodeID1="92" NodeID2="95" Weight="37" />
+    <Edge NodeID1="92" NodeID2="98" Weight="28" />
+    <Edge NodeID1="93" NodeID2="92" Weight="50" />
+    <Edge NodeID1="79" NodeID2="91" Weight="30" />
+    <Edge NodeID1="86" NodeID2="87" Weight="29" />
+    <Edge NodeID1="85" NodeID2="86" Weight="42" />
+    <Edge NodeID1="85" NodeID2="83" Weight="32" />
+    <Edge NodeID1="84" NodeID2="85" Weight="47" />
+    <Edge NodeID1="84" NodeID2="88" Weight="38" />
+    <Edge NodeID1="77" NodeID2="84" Weight="86" />
+    <Edge NodeID1="82" NodeID2="77" Weight="44" />
+    <Edge NodeID1="77" NodeID2="81" Weight="58" />
+  </Edges>
+</Figure>
