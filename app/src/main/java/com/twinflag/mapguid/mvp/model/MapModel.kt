@@ -4,7 +4,7 @@ import com.twinflag.mapguid.mvp.model.bean.Figure
 
 class MapModel private constructor(){
 
-    val mutableMap: MutableMap<String, Figure> = mutableMapOf()
+    private val mutableMap: MutableMap<String, Figure> = mutableMapOf()
 
     companion object {
 
