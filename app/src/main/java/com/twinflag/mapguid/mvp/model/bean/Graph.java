@@ -1,4 +1,4 @@
-package com.twinflag.mapguid;
+package com.twinflag.mapguid.mvp.model.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,32 +8,36 @@ import java.util.PriorityQueue;
 
 public class Graph {
 
-	private final Map<Character, List<Vertex>> vertices;
+	private final Map<String, List<Vertex>> vertices;
 
 	public Graph() {
-		this.vertices = new HashMap<Character, List<Vertex>>();
+		this.vertices = new HashMap<>();
 	}
 
-	public void addVertex(Character character, List<Vertex> vertex) {
-		this.vertices.put(character, vertex);
+	public void addVertex(String nodeId, List<Vertex> vertex) {
+		this.vertices.put(nodeId, vertex);
 	}
 
-	public void addVertex(Character character, Vertex vertex) {
-		List<Vertex> verticeList = this.vertices.get(character);
+	public void addVertex(String nodeId, Vertex vertex) {
+		List<Vertex> verticeList = this.vertices.get(nodeId);
 		if (verticeList == null) {
 			verticeList = new ArrayList<>();
 		}
 		verticeList.add(vertex);
-		this.vertices.put(character, verticeList);
+		this.vertices.put(nodeId, verticeList);
 	}
 
-	public List<Character> getShortestPath(Character start, Character finish) {
-		final Map<Character, Integer> distances = new HashMap<Character, Integer>();
-		final Map<Character, Vertex> previous = new HashMap<Character, Vertex>();
+	public void clear() {
+		this.vertices.clear();
+	}
+
+	public List<String> getShortestPath(String start, String finish) {
+		final Map<String, Integer> distances = new HashMap<String, Integer>();
+		final Map<String, Vertex> previous = new HashMap<String, Vertex>();
 		PriorityQueue<Vertex> nodes = new PriorityQueue<Vertex>();
 
-		for(Character vertex : vertices.keySet()) {
-			if (vertex == start) {
+		for(String vertex : vertices.keySet()) {
+			if (vertex.equals(start)) {
 				distances.put(vertex, 0);
 				nodes.add(new Vertex(vertex, 0));
 			} else {
@@ -45,8 +49,8 @@ public class Graph {
 
 		while (!nodes.isEmpty()) {
 			Vertex smallest = nodes.poll();
-			if (smallest.getId() == finish) {
-				final List<Character> path = new ArrayList<Character>();
+			if (finish.equals(smallest.getId())) {
+				final List<String> path = new ArrayList<>();
 				while (previous.get(smallest.getId()) != null) {
 					path.add(smallest.getId());
 					smallest = previous.get(smallest.getId());
@@ -77,7 +81,7 @@ public class Graph {
 			}
 		}
 
-		return new ArrayList<Character>(distances.keySet());
+		return new ArrayList<String>(distances.keySet());
 	}
 
 }

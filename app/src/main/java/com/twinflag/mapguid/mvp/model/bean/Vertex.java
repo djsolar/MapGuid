@@ -1,17 +1,17 @@
-package com.twinflag.mapguid;
+package com.twinflag.mapguid.mvp.model.bean;
 
 public class Vertex implements Comparable<Vertex> {
 
-	private Character id;
+	private String id;
 	private Integer distance;
 
-	public Vertex(Character id, Integer distance) {
+	public Vertex(String id, Integer distance) {
 		super();
 		this.id = id;
 		this.distance = distance;
 	}
 
-	public Character getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -19,7 +19,7 @@ public class Vertex implements Comparable<Vertex> {
 		return distance;
 	}
 
-	public void setId(Character id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
