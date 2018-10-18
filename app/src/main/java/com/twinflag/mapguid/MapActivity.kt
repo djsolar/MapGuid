@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.View
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import com.bumptech.glide.Glide
 import com.twinflag.mapguid.mvp.contract.MapContract
 import com.twinflag.mapguid.mvp.model.bean.Figure
 import com.twinflag.mapguid.mvp.presenter.MapPresenter
@@ -66,6 +67,7 @@ class MapActivity : AppCompatActivity(), MapContract.View {
     }
 
     override fun showSettingStartNode(figures: List<Figure>) {
+        var firstMapName: String? = null
         figures.asReversed().forEachIndexed{
             index, figure ->
             val radioButton = createRadioButton(figure.mapName)
@@ -75,6 +77,7 @@ class MapActivity : AppCompatActivity(), MapContract.View {
             }
             if (index == 0) {
                 radioButton.isChecked = true
+                firstMapName = figure.mapName
             }
             floorRadioGroup.addView(radioButton)
             if (index != figures.size -1) {
@@ -82,10 +85,11 @@ class MapActivity : AppCompatActivity(), MapContract.View {
             }
         }
         floorRadioGroup.visibility = View.VISIBLE
+        mPresenter.displaySelectFloor(firstMapName!!)
     }
 
     override fun showIndicateFloor(figure: Figure) {
-
+        Glide.with(this).load(figure.mapPath).into(indicatorFloorImageView)
     }
 
     private fun createRadioButton(radioButtonText: String): RadioButton {
