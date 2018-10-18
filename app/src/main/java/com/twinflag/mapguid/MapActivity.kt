@@ -71,17 +71,17 @@ class MapActivity : AppCompatActivity(), MapContract.View {
         figures.asReversed().forEachIndexed{
             index, figure ->
             val radioButton = createRadioButton(figure.mapName)
-            radioButton.setOnClickListener { view ->
-                (view as RadioButton).isChecked = true
-                mPresenter.displaySelectFloor(view.text.toString())
-            }
-            if (index == 0) {
-                radioButton.isChecked = true
-                firstMapName = figure.mapName
+            radioButton.setOnCheckedChangeListener{ view, checked ->
+                if ((view as RadioButton).isChecked) {
+                    mPresenter.displaySelectFloor(view.text.toString())
+                }
             }
             floorRadioGroup.addView(radioButton)
             if (index != figures.size -1) {
                 floorRadioGroup.addView(createDividerView())
+            }
+            if (index == figures.size - 1) {
+                firstMapName = figure.mapName
             }
         }
         floorRadioGroup.visibility = View.VISIBLE

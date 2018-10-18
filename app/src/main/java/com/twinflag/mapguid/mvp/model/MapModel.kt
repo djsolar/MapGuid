@@ -138,7 +138,7 @@ class MapModel private constructor() : MapModeOperate {
             }
         }
         this.figures = figures
-        this.figureMap = figures.associateBy({it.mapName}, {it}).toMutableMap()
+        this.figureMap = figures.associateBy({it.mapName.substring(0, it.mapName.lastIndexOf('.'))}, {it}).toMutableMap()
         return true
     }
 
