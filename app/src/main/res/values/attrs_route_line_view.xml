@@ -1,8 +1,14 @@
 <resources>
     <declare-styleable name="RouteLineView">
-        <attr name="exampleString" format="string" />
-        <attr name="exampleDimension" format="dimension" />
-        <attr name="exampleColor" format="color" />
-        <attr name="exampleDrawable" format="color|reference" />
+        <!-- 起始点的图片 -->
+        <attr name="startNodeDrawable" format="reference" />
+        <!-- 结束点的图片 -->
+        <attr name="endNodeDrawable" format="reference"/>
+
+        <!-- 路线的颜色 -->
+        <attr name="edgeLineColor" format="color"/>
+        <!-- 路线的宽度-->
+        <attr name="edgeLineWidth" format="dimension"/>
+        
     </declare-styleable>
 </resources>

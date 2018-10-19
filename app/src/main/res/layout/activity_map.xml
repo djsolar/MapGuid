@@ -1,48 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapActivity">
 
-    <FrameLayout
-        android:id="@+id/routeLineLayout"
+    <LinearLayout
+        android:id="@+id/mapViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/upperFloorImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/floor_info"/>
 
-   <RadioGroup
-        android:id="@+id/floorRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/radioGroupMarginLeft"
-        android:layout_marginLeft="@dimen/radioGroupMarginLeft"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/lowerFloorImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/floor_info"/>
+    </LinearLayout>
 
 
-    </RadioGroup>
+    <com.twinflag.mapguid.RouteLineView
+        android:id="@+id/routeLineView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:edgeLineColor="@color/colorAccent"
+        app:edgeLineWidth="2dp"
+        app:endNodeDrawable="@mipmap/end"
+        app:startNodeDrawable="@mipmap/start" />
 
-    <ImageView
-        android:id="@+id/indicatorFloorImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/f1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/floor_info"/>
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

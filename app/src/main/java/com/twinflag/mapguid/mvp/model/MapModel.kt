@@ -24,6 +24,8 @@ class MapModel private constructor() : MapModeOperate {
 
         const val DEFAULT_DIFFER = 10
 
+        const val DEFAULT_SELECT_DIFFER = 80
+
         const val DEFAULT_LIFT_CATEGORY = 5
 
         const val TAG = "MapModel"
@@ -71,7 +73,7 @@ class MapModel private constructor() : MapModeOperate {
         }
         reset()
         this.mapFolder = mapFolder
-        if(!parseMap())
+        if (!parseMap())
             return
         linkFigures()
         loadData()
@@ -138,7 +140,7 @@ class MapModel private constructor() : MapModeOperate {
             }
         }
         this.figures = figures
-        this.figureMap = figures.associateBy({it.mapName.substring(0, it.mapName.lastIndexOf('.'))}, {it}).toMutableMap()
+        this.figureMap = figures.associateBy({ it.mapName.substring(0, it.mapName.lastIndexOf('.')) }, { it }).toMutableMap()
         return true
     }
 
@@ -149,6 +151,7 @@ class MapModel private constructor() : MapModeOperate {
     private fun parseXmlFile(file: File): Figure? {
         val fileName: String = file.name
         val mapPath: String = file.path.replace(".xml", ".png")
+        val figureName = fileName.substring(0, fileName.lastIndexOf('.'))
         val inputStream = FileInputStream(file)
         val parser = Xml.newPullParser()
         parser.setInput(inputStream, "UTF-8")
@@ -157,7 +160,7 @@ class MapModel private constructor() : MapModeOperate {
         val nodes: ArrayList<Figure.Node> = arrayListOf()
         val edges: ArrayList<Figure.Edge> = arrayListOf()
         while (eventType != XmlResourceParser.END_DOCUMENT) {
-            when(eventType) {
+            when (eventType) {
                 XmlResourceParser.START_TAG -> {
                     when {
                         parser.name == "Node" -> {
@@ -166,7 +169,7 @@ class MapModel private constructor() : MapModeOperate {
                             val locationId = parser.getAttributeValue(null, "LocationId").toInt()
                             val categoryId = parser.getAttributeValue(null, "CategoryId").toInt()
                             val coordinateArray = coordinate.split(",")
-                            val node = Figure.Node(id, fileName, coordinateArray[0].toFloat(), coordinateArray[1].toFloat(), locationId, categoryId)
+                            val node = Figure.Node(id, figureName, coordinateArray[0].toFloat(), coordinateArray[1].toFloat(), locationId, categoryId)
                             figure?.nodes?.add(node)
                         }
                         parser.name == "Edge" -> {
@@ -193,6 +196,23 @@ class MapModel private constructor() : MapModeOperate {
         return figure
     }
 
+    override fun getStartNode(figureName: String, x: Float, y: Float): Figure.Node? {
+        val figure = figureMap!![figureName]
+        val nodes = figure?.nodes
+        var distance = Double.MAX_VALUE
+        var selectNode: Figure.Node? = null
+        nodes?.forEach {
+            val tempDistance = distanceBetweenNodeWidthPoint(it, x, y)
+            if (tempDistance <= distance) {
+                distance = tempDistance
+                if (distance < DEFAULT_SELECT_DIFFER) {
+                    selectNode = it
+                }
+            }
+        }
+        return selectNode
+    }
+
     /**
      * 获取所有的点的Map {"id": Node}
      */
@@ -200,11 +220,15 @@ class MapModel private constructor() : MapModeOperate {
         return figures.flatMap { it.nodes }.associateBy({ it.id }, { it }).toMutableMap()
     }
 
+    private fun distanceBetweenNodeWidthPoint(firstNode: Figure.Node, x: Float, y: Float): Double {
+        return Math.sqrt(Math.pow(((firstNode.locationX - x).toDouble()), 2.0) + Math.pow((firstNode.locationY - y).toDouble(), 2.0))
+    }
+
     /**
      *
      * 获取两个点的平面距离
      */
     private fun distanceBetweenNodes(firstNode: Figure.Node, secondNode: Figure.Node): Double {
-        return Math.sqrt(Math.pow(((firstNode.locationX - secondNode.locationX).toDouble()), 2.0) + Math.pow((firstNode.locationX - secondNode.locationX).toDouble(), 2.0))
+        return Math.sqrt(Math.pow(((firstNode.locationX - secondNode.locationX).toDouble()), 2.0) + Math.pow((firstNode.locationY - secondNode.locationY).toDouble(), 2.0))
     }
 }

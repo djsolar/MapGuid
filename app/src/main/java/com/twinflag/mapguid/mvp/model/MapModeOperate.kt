@@ -31,4 +31,6 @@ interface MapModeOperate {
     fun getNode(nodeId: String): Figure.Node?
 
     fun getShortestDistance(nodeId: String): List<Figure.Node>
+
+    fun getStartNode(figureName: String, x: Float, y: Float): Figure.Node?
 }

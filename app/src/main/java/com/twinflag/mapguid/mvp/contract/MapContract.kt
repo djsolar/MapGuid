@@ -1,5 +1,6 @@
 package com.twinflag.mapguid.mvp.contract
 
+import android.graphics.Point
 import com.twinflag.mapguid.base.IBasePresenter
 import com.twinflag.mapguid.base.IBaseView
 import com.twinflag.mapguid.mvp.model.bean.Figure
@@ -7,10 +8,6 @@ import com.twinflag.mapguid.mvp.model.bean.Figure
 interface MapContract {
 
     interface View : IBaseView {
-
-        fun showSettingStartNode(figures: List<Figure>)
-
-        fun showIndicateFloor(figure: Figure)
 
         /**
          * 播放视频
@@ -30,7 +27,7 @@ interface MapContract {
         /**
          * 显示行进路线
          */
-        fun showNavigationLine()
+        fun showNavigationLine(points: List<Point>)
 
         /**
          * 清除
@@ -39,17 +36,15 @@ interface MapContract {
         fun clearView()
 
         fun showError(message: String)
-
     }
 
     interface Presenter : IBasePresenter<View> {
 
         fun start()
 
-        fun receiveEndPoint()
+        fun receiveEndPoint(endNodeId: String)
 
         fun playMaterial()
 
-        fun displaySelectFloor(floorName: String)
     }
 }

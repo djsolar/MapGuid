@@ -1,9 +1,7 @@
 package com.twinflag.mapguid
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.text.TextPaint
 import android.util.AttributeSet
@@ -14,48 +12,18 @@ import android.view.View
  */
 class RouteLineView : View {
 
-    private var _exampleString: String? = null // TODO: use a default from R.string...
-    private var _exampleColor: Int = Color.RED // TODO: use a default from R.color...
-    private var _exampleDimension: Float = 0f // TODO: use a default from R.dimen...
+    companion object {
+        const val DEFAULT_LINE_COLOR = Color.GREEN
+        const val DEFAULT_LINE_WIDTH = 1.0f
+    }
 
-    private var textPaint: TextPaint? = null
-    private var textWidth: Float = 0f
-    private var textHeight: Float = 0f
-
-    /**
-     * The text to draw
-     */
-    var exampleString: String?
-        get() = _exampleString
-        set(value) {
-            _exampleString = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * The font color
-     */
-    var exampleColor: Int
-        get() = _exampleColor
-        set(value) {
-            _exampleColor = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * In the example view, this dimension is the font size.
-     */
-    var exampleDimension: Float
-        get() = _exampleDimension
-        set(value) {
-            _exampleDimension = value
-            invalidateTextPaintAndMeasurements()
-        }
-
-    /**
-     * In the example view, this drawable is drawn above the text.
-     */
-    var exampleDrawable: Drawable? = null
+    private var _startNodeDrawable: Drawable? = null
+    private var _endNodeDrawable: Drawable? = null
+    private var _edgeLineColor: Int? = null
+    private var _edgeLineWidth: Float? = null
+    private var linePaint: Paint? = null
+    private var linePoints: MutableList<Point>? = null
+    private val path = Path()
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -73,71 +41,77 @@ class RouteLineView : View {
         // Load attributes
         val a = context.obtainStyledAttributes(
                 attrs, R.styleable.RouteLineView, defStyle, 0)
-
-        _exampleString = a.getString(
-                R.styleable.RouteLineView_exampleString)
-        _exampleColor = a.getColor(
-                R.styleable.RouteLineView_exampleColor,
-                exampleColor)
+        _startNodeDrawable = a.getDrawable(R.styleable.RouteLineView_startNodeDrawable)
+        _endNodeDrawable = a.getDrawable(R.styleable.RouteLineView_endNodeDrawable)
+        _edgeLineColor = a.getColor(
+                R.styleable.RouteLineView_edgeLineColor,
+                DEFAULT_LINE_COLOR)
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
-        _exampleDimension = a.getDimension(
-                R.styleable.RouteLineView_exampleDimension,
-                exampleDimension)
-
-        if (a.hasValue(R.styleable.RouteLineView_exampleDrawable)) {
-            exampleDrawable = a.getDrawable(
-                    R.styleable.RouteLineView_exampleDrawable)
-            exampleDrawable?.callback = this
-        }
-
+        _edgeLineWidth = a.getDimension(
+                R.styleable.RouteLineView_edgeLineWidth,
+                DEFAULT_LINE_WIDTH)
         a.recycle()
 
         // Set up a default TextPaint object
-        textPaint = TextPaint().apply {
+        linePaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
-            textAlign = Paint.Align.LEFT
-        }
-
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements()
-    }
-
-    private fun invalidateTextPaintAndMeasurements() {
-        textPaint?.let {
-            it.textSize = exampleDimension
-            it.color = exampleColor
-            textWidth = it.measureText(exampleString)
-            textHeight = it.fontMetrics.bottom
+            style = Paint.Style.STROKE
+            color = _edgeLineColor!!
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        val paddingLeft = paddingLeft
-        val paddingTop = paddingTop
-        val paddingRight = paddingRight
-        val paddingBottom = paddingBottom
-
-        val contentWidth = width - paddingLeft - paddingRight
-        val contentHeight = height - paddingTop - paddingBottom
-
-        exampleString?.let {
-            // Draw the text.
-            canvas.drawText(it,
-                    paddingLeft + (contentWidth - textWidth) / 2,
-                    paddingTop + (contentHeight + textHeight) / 2,
-                    textPaint)
+        // 绘制开始界点的图像
+        path.reset()
+        if (linePoints != null && linePoints?.size!! > 0) {
+            linePoints?.first()?.let {
+                val drawableWidth = _startNodeDrawable?.intrinsicWidth
+                val halfDrawableWidth = drawableWidth!! / 2
+                val drawableHeight = _startNodeDrawable?.intrinsicHeight
+                val halfDrawableHeight = drawableHeight!! / 2
+                _startNodeDrawable?.setBounds(it.x - halfDrawableWidth, it.y -
+                        halfDrawableHeight, it.x + halfDrawableWidth, it.y + halfDrawableHeight)
+                _startNodeDrawable?.draw(canvas)
+                path.moveTo(it.x.toFloat(), it.y.toFloat())
+            }
         }
 
-        // Draw the example drawable on top of the text.
-        exampleDrawable?.let {
-            it.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight)
-            it.draw(canvas)
+
+        if (linePoints != null && linePoints?.size!! > 1) {
+            linePoints?.forEachIndexed { index, point ->
+                if (index > 0) {
+                    path.lineTo(point.x.toFloat(), point.y.toFloat())
+                }
+            }
+            canvas.drawPath(path, linePaint)
+            // 绘制结束点的图标
+            val endPoint = linePoints?.last()
+            val drawableWidth = _endNodeDrawable?.intrinsicWidth
+            val halfDrawableWidth = drawableWidth!! / 2
+            val drawableHeight = _endNodeDrawable?.intrinsicHeight
+            val halfDrawableHeight = drawableHeight!! / 2
+            _endNodeDrawable?.setBounds(endPoint?.x!! - halfDrawableWidth, endPoint?.y!! -
+                    halfDrawableHeight, endPoint?.x!! + halfDrawableWidth, endPoint?.y!! + halfDrawableHeight)
+            _endNodeDrawable?.draw(canvas)
         }
+    }
+
+    fun drawNavigationLine(points: MutableList<Point>) {
+        this.linePoints = points
+        this.invalidate()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        path.close()
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+        setMeasuredDimension(widthSize, heightSize)
     }
 }
