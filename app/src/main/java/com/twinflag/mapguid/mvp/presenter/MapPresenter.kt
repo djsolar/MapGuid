@@ -1,6 +1,5 @@
 package com.twinflag.mapguid.mvp.presenter
 
-import android.graphics.Point
 import android.text.TextUtils
 import com.twinflag.mapguid.MyApplication
 import com.twinflag.mapguid.mvp.contract.MapContract
@@ -10,7 +9,7 @@ class MapPresenter: MapContract.Presenter {
     val mapModel: MapModel by lazy {
         MapModel.mapModel
     }
-    var startNodeId: String = "77" //by Preference("startNodeId", "")
+    var startNodeId: String = "981F" //by Preference("startNodeId", "")
 
     private var rootView: MapContract.View? = null
 
@@ -32,10 +31,10 @@ class MapPresenter: MapContract.Presenter {
         nodes.map {
             println(it.toString())
         }
-        val points = nodes.map {
+        /*val points = nodes.map {
             Point(it.locationX.toInt(), it.locationY.toInt())
-        }
-        rootView?.showNavigationLine(points)
+        }*/
+        // rootView?.showNavigationLine(points)
     }
 
     override fun playMaterial() {

@@ -1,6 +1,7 @@
 package com.twinflag.mapguid.mvp.model
 
 import com.twinflag.mapguid.mvp.model.bean.Figure
+import com.twinflag.mapguid.mvp.model.bean.MapLine
 
 interface MapModeOperate {
 
@@ -31,6 +32,8 @@ interface MapModeOperate {
     fun getNode(nodeId: String): Figure.Node?
 
     fun getShortestDistance(nodeId: String): List<Figure.Node>
+
+    fun getShortestLineMap(nodeId: String): MapLine
 
     fun getStartNode(figureName: String, x: Float, y: Float): Figure.Node?
 }

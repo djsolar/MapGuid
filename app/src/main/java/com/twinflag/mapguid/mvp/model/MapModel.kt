@@ -2,13 +2,12 @@ package com.twinflag.mapguid.mvp.model
 
 import android.content.res.XmlResourceParser
 import android.util.Xml
-import com.twinflag.mapguid.mvp.model.bean.Figure
-import com.twinflag.mapguid.mvp.model.bean.Graph
-import com.twinflag.mapguid.mvp.model.bean.Vertex
+import com.twinflag.mapguid.mvp.model.bean.*
 import java.io.File
 import java.io.FileInputStream
 
 class MapModel private constructor() : MapModeOperate {
+
     override var figures: MutableList<Figure>? = null
 
     override var startNode: Figure.Node? = null
@@ -54,14 +53,33 @@ class MapModel private constructor() : MapModeOperate {
             graph.addVertex(it.nodeId1, Vertex(it.nodeId2, it.weight))
             graph.addVertex(it.nodeId2, Vertex(it.nodeId1, it.weight))
         }
+        this.edges?.forEach{
+            println(it)
+        }
     }
 
     /**
      * 获取连个点之间的最近距离
      */
     override fun getShortestDistance(nodeId: String): List<Figure.Node> {
-        val pathNodes: List<String> = graph.getShortestPath(startNode?.id, nodeId)
-        return pathNodes.asReversed().map { this.nodeMap!![nodeId]!! }
+        val pathNodes: List<String> = graph.getShortestPath(startNode?.id, nodeId).asReversed()
+        val nodes: ArrayList<Figure.Node> = arrayListOf()
+        pathNodes.forEach { nodeId ->
+            nodes.add(this.nodeMap!![nodeId]!!)
+        }
+        return nodes.toList()
+    }
+
+    override fun getShortestLineMap(nodeId: String): MapLine {
+        val nodes = getShortestDistance(nodeId)
+        val map = nodes.groupBy { it.floor }
+        if (map.size == 1) {
+            val mapPiece = MapPiece
+            val mapLine = MapLine()
+        }
+        val keys = map.keys
+        val sortKeys = keys.sorted()
+
     }
 
     /**
@@ -92,7 +110,7 @@ class MapModel private constructor() : MapModeOperate {
                 val figureSecond = figures[i + 1]
                 // 筛选出电梯
                 val firstNodes = figureFirst.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY }
-                val secondNodes = figureFirst.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY }
+                val secondNodes = figureSecond.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY }
                 if (firstNodes.isEmpty() || secondNodes.isEmpty()) {
                     return
                 }
@@ -169,14 +187,14 @@ class MapModel private constructor() : MapModeOperate {
                             val locationId = parser.getAttributeValue(null, "LocationId").toInt()
                             val categoryId = parser.getAttributeValue(null, "CategoryId").toInt()
                             val coordinateArray = coordinate.split(",")
-                            val node = Figure.Node(id, figureName, coordinateArray[0].toFloat(), coordinateArray[1].toFloat(), locationId, categoryId)
+                            val node = Figure.Node(id + figureName, figureName, coordinateArray[0].toFloat(), coordinateArray[1].toFloat(), locationId, categoryId)
                             figure?.nodes?.add(node)
                         }
                         parser.name == "Edge" -> {
                             val nodeId1 = parser.getAttributeValue(null, "NodeID1")
                             val nodeId2 = parser.getAttributeValue(null, "NodeID2")
                             val weight = parser.getAttributeValue(null, "Weight")
-                            val edge = Figure.Edge(nodeId1, nodeId2, weight.toInt())
+                            val edge = Figure.Edge(nodeId1 + figureName, nodeId2 + figureName, weight.toInt())
                             figure?.edges?.add(edge)
                         }
                         parser.name == "Figure" -> {
@@ -195,6 +213,7 @@ class MapModel private constructor() : MapModeOperate {
         }
         return figure
     }
+
 
     override fun getStartNode(figureName: String, x: Float, y: Float): Figure.Node? {
         val figure = figureMap!![figureName]

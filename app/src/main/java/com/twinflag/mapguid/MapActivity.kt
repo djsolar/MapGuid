@@ -26,7 +26,7 @@ class MapActivity : AppCompatActivity(), MapContract.View {
     override fun onResume() {
         super.onResume()
         mPresenter.start()
-        mPresenter.receiveEndPoint("95")
+        mPresenter.receiveEndPoint("911F")
     }
 
     override fun onDestroy() {

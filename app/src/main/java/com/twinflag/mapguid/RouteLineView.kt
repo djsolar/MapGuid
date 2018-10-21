@@ -58,6 +58,7 @@ class RouteLineView : View {
             flags = Paint.ANTI_ALIAS_FLAG
             style = Paint.Style.STROKE
             color = _edgeLineColor!!
+            strokeWidth = _edgeLineWidth!!
         }
     }
 
@@ -66,6 +67,7 @@ class RouteLineView : View {
 
         // 绘制开始界点的图像
         path.reset()
+
         if (linePoints != null && linePoints?.size!! > 0) {
             linePoints?.first()?.let {
                 val drawableWidth = _startNodeDrawable?.intrinsicWidth
@@ -78,7 +80,6 @@ class RouteLineView : View {
                 path.moveTo(it.x.toFloat(), it.y.toFloat())
             }
         }
-
 
         if (linePoints != null && linePoints?.size!! > 1) {
             linePoints?.forEachIndexed { index, point ->
@@ -93,10 +94,11 @@ class RouteLineView : View {
             val halfDrawableWidth = drawableWidth!! / 2
             val drawableHeight = _endNodeDrawable?.intrinsicHeight
             val halfDrawableHeight = drawableHeight!! / 2
-            _endNodeDrawable?.setBounds(endPoint?.x!! - halfDrawableWidth, endPoint?.y!! -
-                    halfDrawableHeight, endPoint?.x!! + halfDrawableWidth, endPoint?.y!! + halfDrawableHeight)
+            _endNodeDrawable?.setBounds(endPoint?.x!! - halfDrawableWidth, endPoint.y -
+                    halfDrawableHeight, endPoint.x + halfDrawableWidth, endPoint.y + halfDrawableHeight)
             _endNodeDrawable?.draw(canvas)
         }
+
     }
 
     fun drawNavigationLine(points: MutableList<Point>) {
