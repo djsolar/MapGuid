@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import com.twinflag.mapguid.mvp.model.bean.MapPointF
+import android.graphics.DashPathEffect
+import com.twinflag.mapguid.mvp.model.MapModel
+
 
 /**
  * TODO: document your custom view class.
@@ -23,9 +26,13 @@ class RouteLineView : View {
 
     private var _startNodeDrawable: Drawable? = null
     private var _endNodeDrawable: Drawable? = null
+    private var _liftDrawable: Drawable? = null
     private var _edgeLineColor: Int? = null
+    private var _liftLineColor: Int? = null
     private var _edgeLineWidth: Float? = null
+    private var _ballRadius: Float? = null
     private var linePaint: Paint? = null
+    private var liftPaint: Paint? = null
     private var ballPaint: Paint? = null
     private var linePoints: MutableList<MapPointF>? = null
     private val path = Path()
@@ -34,11 +41,12 @@ class RouteLineView : View {
     private val _mapPointDistanceList = mutableListOf<PointDistanceFromStartPoint>()
     private var _allNodeDistance = 0.0
     private var mCurrentPointF: RatioPointF? = null
-    private var mLastPointF: RatioPointF? = null
+    // private var mLastPointF: RatioPointF? = null
     private var _rightFootPrintDrawable: Drawable? = null
     private var _leftFootPrintDrawable: Drawable? = null
-    private var isRight: Boolean = true
-    private var _animationFootPrint = false
+    private var _paths = arrayOf(Path(), Path(), Path())
+    // private var isRight: Boolean = true
+    // private var _animationFootPrint = false
 
     constructor(context: Context) : super(context) {
         init(null, 0)
@@ -58,14 +66,17 @@ class RouteLineView : View {
                 attrs, R.styleable.RouteLineView, defStyle, 0)
         _startNodeDrawable = a.getDrawable(R.styleable.RouteLineView_startNodeDrawable)
         _endNodeDrawable = a.getDrawable(R.styleable.RouteLineView_endNodeDrawable)
+        _liftDrawable = a.getDrawable(R.styleable.RouteLineView_liftDrawable)
         _edgeLineColor = a.getColor(
                 R.styleable.RouteLineView_edgeLineColor,
                 DEFAULT_LINE_COLOR)
+        _liftLineColor = a.getColor(R.styleable.RouteLineView_liftLineColor, DEFAULT_LINE_COLOR)
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
         _edgeLineWidth = a.getDimension(
                 R.styleable.RouteLineView_edgeLineWidth,
                 DEFAULT_LINE_WIDTH)
+        _ballRadius = a.getDimension(R.styleable.RouteLineView_ballRadius, DEFAULT_CIRCLE_RADIUS)
         _rightFootPrintDrawable = a.getDrawable(R.styleable.RouteLineView_foot_print_right)
         _leftFootPrintDrawable = a.getDrawable(R.styleable.RouteLineView_foot_print_left)
         a.recycle()
@@ -73,15 +84,27 @@ class RouteLineView : View {
         // Set up a default TextPaint object
         linePaint = Paint().apply {
             flags = Paint.ANTI_ALIAS_FLAG
+            isDither = true
             style = Paint.Style.STROKE
             color = _edgeLineColor!!
             strokeWidth = _edgeLineWidth!!
-            xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP)
         }
         ballPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             isDither = true
             style = Paint.Style.FILL_AND_STROKE
             color = _edgeLineColor!!
+        }
+
+        val path = Path()
+        path.addCircle(0f, 0f, _edgeLineWidth!!, Path.Direction.CW)
+
+        liftPaint = Paint().apply {
+            flags = Paint.ANTI_ALIAS_FLAG
+            isDither = true
+            style = Paint.Style.FILL_AND_STROKE
+            color = _liftLineColor!!
+            strokeWidth = _edgeLineWidth!! * 2
+            pathEffect = PathDashPathEffect(path, _edgeLineWidth!! * 4, 0f, PathDashPathEffect.Style.TRANSLATE)
         }
     }
 
@@ -115,11 +138,37 @@ class RouteLineView : View {
                         // val previousPoint = linePoints?.get(index - 1)
                         // path.quadTo((point.x + previousPoint!!.x) / 2, (point.y + previousPoint.y) / 2, point.x, point.y)
                         if (index > 0) {
-                            path.lineTo(point.x, point.y)
+                            val previousPoint = linePoints!![index - 1]
+                            if ((previousPoint.type == MapModel.DEFAULT_LIFT_CATEGORY || previousPoint.type == MapModel.DEFAULT_LIFE_OTHER_CATEGORY) &&
+                                    (point.type == MapModel.DEFAULT_LIFT_CATEGORY || point.type == MapModel.DEFAULT_LIFE_OTHER_CATEGORY) && previousPoint.floor != point.floor) {
+                                canvas.drawPath(path, linePaint)
+                                path.reset()
+                                canvas.save()
+                                val liftWidth = _liftDrawable?.intrinsicWidth!! / 2
+                                val liftHeight = _liftDrawable?.intrinsicHeight!! / 2
+                                canvas.translate(previousPoint.x - liftWidth / 2, previousPoint.y - liftHeight / 2)
+                                val liftBitmap = (_liftDrawable as BitmapDrawable).bitmap
+                                scaleMatrix.postScale(0.5f, 0.5f)
+                                canvas.drawBitmap(liftBitmap, scaleMatrix, null)
+                                canvas.restore()
+                                canvas.save()
+                                canvas.translate(point.x - liftWidth / 2, point.y - liftHeight / 2)
+                                canvas.drawBitmap(liftBitmap, scaleMatrix, null)
+                                canvas.restore()
+                                path.moveTo(previousPoint.x, previousPoint.y)
+                                path.lineTo(point.x, point.y)
+                                canvas.drawPath(path, liftPaint)
+                                path.reset()
+                                path.moveTo(point.x, point.y)
+                            } else {
+                                path.lineTo(point.x, point.y)
+                            }
+
                         }
                     }
                 }
             }
+            canvas.drawPath(path, linePaint)
             // 绘制结束点的图标
             val endPoint = linePoints?.last()
             val drawableWidth = _endNodeDrawable?.intrinsicWidth
@@ -133,7 +182,6 @@ class RouteLineView : View {
             canvas.translate(endPoint?.x!! - halfDrawableWidth * mCurrentValue, endPoint.y - drawableHeight!! * mCurrentValue)
             canvas.drawBitmap(endBitmap, scaleMatrix, null)
             canvas.restore()
-            canvas.drawPath(path, linePaint)
         }
 
         if (mCurrentPointF != null) {
@@ -175,7 +223,7 @@ class RouteLineView : View {
                 }
                 canvas.restore()*/
             //}
-            canvas.drawCircle(mCurrentPointF!!.x, mCurrentPointF!!.y, dp2px(DEFAULT_CIRCLE_RADIUS), ballPaint)
+            canvas.drawCircle(mCurrentPointF!!.x, mCurrentPointF!!.y, _ballRadius!!, ballPaint)
         }
     }
 
@@ -208,7 +256,7 @@ class RouteLineView : View {
         valueAnimator.start()
 
         val lineValueAnimator = ValueAnimator.ofFloat(0.0f, _allNodeDistance.toFloat())
-        lineValueAnimator.duration = 10000
+        lineValueAnimator.duration = 3000
         lineValueAnimator.repeatCount = ValueAnimator.INFINITE
         lineValueAnimator.repeatMode = ValueAnimator.RESTART
 
@@ -241,6 +289,9 @@ class RouteLineView : View {
     private fun loadPointDistance() {
         _mapPointDistanceList.clear()
         var distance = 0.0
+        for(path in _paths) {
+            path.reset()
+        }
         for (index in 0 until this.linePoints?.size!! - 1) {
             val start = this.linePoints!![index]
             val end = this.linePoints!![index + 1]

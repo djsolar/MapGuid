@@ -5,14 +5,20 @@
         <!-- 结束点的图片 -->
         <attr name="endNodeDrawable" format="reference"/>
 
+        <attr name="liftDrawable" format="reference"/>
+
         <!-- 路线的颜色 -->
         <attr name="edgeLineColor" format="color"/>
+        <attr name="liftLineColor" format="color"/>
         <!-- 路线的宽度-->
         <attr name="edgeLineWidth" format="dimension"/>
+
+        <attr name="ballRadius" format="dimension"/>
 
         <attr name="foot_print_left" format="reference"/>
 
         <attr name="foot_print_right" format="reference"/>
+
 
     </declare-styleable>
 </resources>

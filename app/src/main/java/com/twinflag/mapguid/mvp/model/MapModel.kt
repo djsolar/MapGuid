@@ -29,6 +29,8 @@ class MapModel private constructor() : MapModeOperate {
 
         const val DEFAULT_LIFT_CATEGORY = 5
 
+        const val DEFAULT_LIFE_OTHER_CATEGORY = 6
+
         const val LIFT_CATEGORY = 5
 
         const val NORMAL_CATEGORY = 0
@@ -85,7 +87,7 @@ class MapModel private constructor() : MapModeOperate {
             val mapPiece = MapPiece(figure!!.mapPath, figure.mapName, figure.width, figure.height)
             val points = arrayListOf<MapPointF>()
             nodes.forEach {
-                points.add(MapPointF(it.locationX, it.locationY, it.categoryId))
+                points.add(MapPointF(it.locationX, it.locationY, it.categoryId, floor))
             }
             return MapLine(arrayListOf(mapPiece), points)
         } else {
@@ -102,9 +104,9 @@ class MapModel private constructor() : MapModeOperate {
             val finalPointF = arrayListOf<MapPointF>()
             newNodes.forEach {
                 if (it.floor == firstFloorName) {
-                    finalPointF.add(MapPointF(it.locationX, it.locationY + lastFigureHeight!!, it.categoryId))
+                    finalPointF.add(MapPointF(it.locationX, it.locationY + lastFigureHeight!!, it.categoryId, it.floor))
                 } else {
-                    finalPointF.add(MapPointF(it.locationX, it.locationY, it.categoryId))
+                    finalPointF.add(MapPointF(it.locationX, it.locationY, it.categoryId, it.floor))
                 }
             }
             val mapPieces = arrayListOf(MapPiece(lastFigure!!.mapPath, lastFigure.mapName, lastFigure.width, lastFigure.height), MapPiece(firstFigure!!.mapPath, firstFigure.mapName, firstFigure.width, firstFigure.height))
@@ -139,8 +141,8 @@ class MapModel private constructor() : MapModeOperate {
                 val figureFirst = figures[i]
                 val figureSecond = figures[i + 1]
                 // 筛选出电梯
-                val firstNodes = figureFirst.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY }
-                val secondNodes = figureSecond.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY }
+                val firstNodes = figureFirst.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY || it.categoryId == DEFAULT_LIFE_OTHER_CATEGORY}
+                val secondNodes = figureSecond.nodes.filter { it.categoryId == DEFAULT_LIFT_CATEGORY || it.categoryId == DEFAULT_LIFE_OTHER_CATEGORY }
                 if (firstNodes.isEmpty() || secondNodes.isEmpty()) {
                     return
                 }

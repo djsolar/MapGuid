@@ -13,9 +13,12 @@
         android:layout_height="match_parent"
         app:edgeLineColor="@color/colorAccent"
         app:edgeLineWidth="2dp"
+        app:ballRadius="4dp"
+        app:liftLineColor="@color/liftColor"
         app:endNodeDrawable="@mipmap/end"
         app:startNodeDrawable="@mipmap/start"
         app:foot_print_left="@mipmap/left_footprint"
-        app:foot_print_right="@mipmap/right_footprint"/>
+        app:foot_print_right="@mipmap/right_footprint"
+        app:liftDrawable="@mipmap/lift"/>
 
 </FrameLayout>
