@@ -4,6 +4,7 @@ import android.graphics.Point
 import com.twinflag.mapguid.base.IBasePresenter
 import com.twinflag.mapguid.base.IBaseView
 import com.twinflag.mapguid.mvp.model.bean.Figure
+import com.twinflag.mapguid.mvp.model.bean.MapLine
 
 interface MapContract {
 
@@ -27,7 +28,7 @@ interface MapContract {
         /**
          * 显示行进路线
          */
-        fun showNavigationLine(points: List<Point>)
+        fun showNavigationLine(mapLine: MapLine)
 
         /**
          * 清除

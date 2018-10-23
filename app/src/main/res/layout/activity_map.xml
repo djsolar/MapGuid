@@ -2,30 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MapActivity">
-
-    <LinearLayout
-        android:id="@+id/mapViewLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/upperFloorImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/floor_info"/>
-
-        <ImageView
-            android:id="@+id/lowerFloorImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/floor_info"/>
-    </LinearLayout>
-
 
     <com.twinflag.mapguid.RouteLineView
         android:id="@+id/routeLineView"
@@ -34,6 +14,8 @@
         app:edgeLineColor="@color/colorAccent"
         app:edgeLineWidth="2dp"
         app:endNodeDrawable="@mipmap/end"
-        app:startNodeDrawable="@mipmap/start" />
+        app:startNodeDrawable="@mipmap/start"
+        app:foot_print_left="@mipmap/left_footprint"
+        app:foot_print_right="@mipmap/right_footprint"/>
 
 </FrameLayout>

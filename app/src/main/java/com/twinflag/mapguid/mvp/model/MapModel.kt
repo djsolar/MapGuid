@@ -1,6 +1,8 @@
 package com.twinflag.mapguid.mvp.model
 
 import android.content.res.XmlResourceParser
+import android.graphics.Point
+import android.graphics.PointF
 import android.util.Xml
 import com.twinflag.mapguid.mvp.model.bean.*
 import java.io.File
@@ -26,6 +28,10 @@ class MapModel private constructor() : MapModeOperate {
         const val DEFAULT_SELECT_DIFFER = 80
 
         const val DEFAULT_LIFT_CATEGORY = 5
+
+        const val LIFT_CATEGORY = 5
+
+        const val NORMAL_CATEGORY = 0
 
         const val TAG = "MapModel"
         val mapModel: MapModel by lazy {
@@ -53,7 +59,7 @@ class MapModel private constructor() : MapModeOperate {
             graph.addVertex(it.nodeId1, Vertex(it.nodeId2, it.weight))
             graph.addVertex(it.nodeId2, Vertex(it.nodeId1, it.weight))
         }
-        this.edges?.forEach{
+        this.edges?.forEach {
             println(it)
         }
     }
@@ -74,12 +80,36 @@ class MapModel private constructor() : MapModeOperate {
         val nodes = getShortestDistance(nodeId)
         val map = nodes.groupBy { it.floor }
         if (map.size == 1) {
-            val mapPiece = MapPiece
-            val mapLine = MapLine()
+            val floor = map.keys.toList()[0]
+            val figure = figureMap!![floor]
+            val mapPiece = MapPiece(figure!!.mapPath, figure.mapName, figure.width, figure.height)
+            val points = arrayListOf<MapPointF>()
+            nodes.forEach {
+                points.add(MapPointF(it.locationX, it.locationY, it.categoryId))
+            }
+            return MapLine(arrayListOf(mapPiece), points)
+        } else {
+            val keys = map.keys
+            val sortKeys = keys.sorted()
+            // 去除中间的电梯节点
+            val firstFloorName = sortKeys.first()
+            val lastFloorName = sortKeys.last()
+            val firstFigure = figureMap!![firstFloorName]
+            val lastFigure = figureMap!![lastFloorName]
+            val newNodes = nodes.filter { it.floor == firstFloorName || it.floor == lastFloorName }
+            val lastFigureHeight = lastFigure?.height
+            // 对新节点的坐标进行处理，如果是第一层的坐标，则要进行向下的位移
+            val finalPointF = arrayListOf<MapPointF>()
+            newNodes.forEach {
+                if (it.floor == firstFloorName) {
+                    finalPointF.add(MapPointF(it.locationX, it.locationY + lastFigureHeight!!, it.categoryId))
+                } else {
+                    finalPointF.add(MapPointF(it.locationX, it.locationY, it.categoryId))
+                }
+            }
+            val mapPieces = arrayListOf(MapPiece(lastFigure!!.mapPath, lastFigure.mapName, lastFigure.width, lastFigure.height), MapPiece(firstFigure!!.mapPath, firstFigure.mapName, firstFigure.width, firstFigure.height))
+            return MapLine(mapPieces, finalPointF)
         }
-        val keys = map.keys
-        val sortKeys = keys.sorted()
-
     }
 
     /**
